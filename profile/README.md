@@ -12,7 +12,7 @@ Ele Ã© uma iniciativa interdisciplinar voltada para auxiliar empresas na transiÃ
   <img src="./images/Typescript_Icon.png" alt="Typescript" height="27"/>
   <img src="./images/Figma_Icon.png" alt="Figma" height="27"/>
   <img src="./images/React_Icon.png" alt="React" width="29"/>
-  <img src="./images/Java_Icon.png" alt="Java" width="60"/>
+  <img src="./images/Java_Icon.png" alt="Java" width="30"/>
   <img src="./images/Spring_Boot_Icon.png" alt="Spring Boot" width="29"/>
   <img src="./images/Kotlin_Icon.png" alt="Kotlin" width="29"/>
   <img src="./images/Python_Icon.png" alt="Python" width="29"/>
