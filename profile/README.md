@@ -19,15 +19,14 @@ Ele é uma iniciativa interdisciplinar voltada para auxiliar empresas na transi�
   <img src="./images/MongoDB_Icon.png" alt="MongoDB" height="30"/>
   <img src="./images/Redis_Icon.png" alt="Redis" height="30"/>
   <img src="./images/Postgre_Icon.png" alt="PostgreSQL" height="30"/>
-  <img src="./images/Github_Icon.png" alt="GitHub" height="30"/>
   <img src="./images/Git_Icon.png" alt="Git" height="30"/>
 </p>
 
 ## Autores
 
-O projeto foi desenvolvido por duas equipes principais: os desenvolvedores de sistema, os analistas de dados.
+O projeto foi desenvolvido por duas equipes principais:
 
-Divididas entre os alunos do 1º ano que idealizaram o projeto e desenvolveram parte do projeto:
+Os alunos do 1º ano que idealizaram o projeto e desenvolveram parte do projeto:
 - Caio Campelo Rocha;
 - Lais Casteluci Almeida;
 - Luiz Miguel Félix Ferreira;
