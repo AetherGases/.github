@@ -44,17 +44,17 @@ E o 2º ano que desenvolveram o restante do projeto:
 ## Documentação
 Para acessar documentações mais detalhadas e obter mais entendimento sobre as partes implementadas durante a  construção do projeto, acesse o README dos repositórios: 
 
-- [Toolskit]("https://github.com/AetherGases/aether-toolskit")
-- [Docs]("https://github.com/AetherGases/aether-docs")
-- [User Experience]("https://github.com/AetherGases/aether-user-experience.git")
-- [Landing]("https://github.com/AetherGases/aether-landing.git")
-- [Administrative]("https://github.com/AetherGases/aether-web-administrative.git")
-- [Mobile]("https://github.com/AetherGases/aether-mobile.git")
-- [Core API]("https://github.com/AetherGases/aether-core-api.git")
-- [Business Inteligence]("https://github.com/AetherGases/aether-analytics.git")
-- [AI SDK]("https://github.com/AetherGases/aether-ai-sdk.git")
-- [AI Gateway]("https://github.com/AetherGases/aether-ai-gateway.git")
-- [Web Flow]("https://github.com/AetherGases/aether-web-flow.git")
+- [Toolskit](https://github.com/AetherGases/aether-toolskit)
+- [Docs](https://github.com/AetherGases/aether-docs)
+- [User Experience](https://github.com/AetherGases/aether-user-experience.git)
+- [Landing](https://github.com/AetherGases/aether-landing.git)
+- [Administrative](https://github.com/AetherGases/aether-web-administrative.git)
+- [Mobile](https://github.com/AetherGases/aether-mobile.git)
+- [Core API](https://github.com/AetherGases/aether-core-api.git)
+- [Business Inteligence](https://github.com/AetherGases/aether-analytics.git)
+- [AI SDK](https://github.com/AetherGases/aether-ai-sdk.git)
+- [AI Gateway](https://github.com/AetherGases/aether-ai-gateway.git)
+- [Web Flow](https://github.com/AetherGases/aether-web-flow.git)
 
 
 ## Acesso ao Aether
