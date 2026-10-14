@@ -1,0 +1,7 @@
+{
+  "name": "Deploy to Amazon EKS",
+  "description": "On a published release: build a Docker image, push it to ECR, and create or update the Deployment on the org's EKS cluster.",
+  "iconName": "octicon rocket",
+  "categories": ["Deployment", "Dockerfile"],
+  "filePatterns": ["^Dockerfile$"]
+}
