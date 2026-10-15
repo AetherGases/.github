@@ -18,6 +18,8 @@
 #   CONTAINER_NAME (repo name)   K8S_NAMESPACE  (default)
 #   CONTAINER_PORT (none: no Service is created)
 #   SERVICE_TYPE   (ClusterIP; use LoadBalancer for public services)
+#   SERVICE_PORT   (port the Service exposes: 80 for LoadBalancer, otherwise
+#                   the container port; the container port is the targetPort)
 
 name: Deploy to Amazon EKS (shared)
 
@@ -86,6 +88,7 @@ jobs:
         VAR_K8S_NAMESPACE: ${{ vars.K8S_NAMESPACE }}
         VAR_CONTAINER_PORT: ${{ vars.CONTAINER_PORT }}
         VAR_SERVICE_TYPE: ${{ vars.SERVICE_TYPE }}
+        VAR_SERVICE_PORT: ${{ vars.SERVICE_PORT }}
         VAR_AWS_REGION: ${{ vars.AWS_REGION }}
         VAR_EKS_CLUSTER: ${{ vars.EKS_CLUSTER }}
       run: |
@@ -94,13 +97,23 @@ jobs:
         ECR_DEFAULT="$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]')"
         # Kubernetes names: lowercase letters, digits and "-" only.
         K8S_DEFAULT="$(echo "$ECR_DEFAULT" | sed 's/[^a-z0-9-]/-/g')"
+        # Port the Service exposes. A LoadBalancer is public, so it defaults to
+        # 80 (the port browsers and Cloudflare use); an internal ClusterIP keeps
+        # the container port, which is what other services call.
+        SVC_TYPE="${VAR_SERVICE_TYPE:-ClusterIP}"
+        if [ "$SVC_TYPE" = "LoadBalancer" ]; then
+          SVC_PORT="${VAR_SERVICE_PORT:-80}"
+        else
+          SVC_PORT="${VAR_SERVICE_PORT:-$VAR_CONTAINER_PORT}"
+        fi
         {
           echo "ECR_REPOSITORY=${VAR_ECR_REPOSITORY:-$ECR_DEFAULT}"
           echo "K8S_DEPLOYMENT=${VAR_K8S_DEPLOYMENT:-$K8S_DEFAULT}"
           echo "CONTAINER_NAME=${VAR_CONTAINER_NAME:-$K8S_DEFAULT}"
           echo "K8S_NAMESPACE=${VAR_K8S_NAMESPACE:-default}"
           echo "CONTAINER_PORT=${VAR_CONTAINER_PORT}"
-          echo "SERVICE_TYPE=${VAR_SERVICE_TYPE:-ClusterIP}"
+          echo "SERVICE_TYPE=${SVC_TYPE}"
+          echo "SERVICE_PORT=${SVC_PORT}"
           echo "AWS_REGION=${VAR_AWS_REGION}"
           echo "EKS_CLUSTER=${VAR_EKS_CLUSTER}"
         } >> "$GITHUB_ENV"
@@ -109,7 +122,7 @@ jobs:
       run: |
         echo "ECR repository : $ECR_REPOSITORY"
         echo "EKS cluster    : $EKS_CLUSTER ($AWS_REGION)"
-        echo "Deployment     : $K8S_NAMESPACE/$K8S_DEPLOYMENT (container $CONTAINER_NAME, port ${CONTAINER_PORT:-none}, service $SERVICE_TYPE)"
+        echo "Deployment     : $K8S_NAMESPACE/$K8S_DEPLOYMENT (container $CONTAINER_NAME, port ${CONTAINER_PORT:-none}, service $SERVICE_TYPE on ${SERVICE_PORT:-none})"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v6
@@ -156,7 +169,7 @@ jobs:
       run: |
         jq -n --argjson sec "$ALL_SECRETS" --argjson var "$ALL_VARS" --arg ns "$K8S_NAMESPACE" '
           ($var + $sec)
-          | with_entries(select(.key | test("^(github_token|aws_|eks_|k8s_|ecr_|container_|service_type$)"; "i") | not))
+          | with_entries(select(.key | test("^(github_token|aws_|eks_|k8s_|ecr_|container_|service_(type|port)$)"; "i") | not))
           | . as $s
           | ($s + (if ($s.POSTGRES_HOST and $s.POSTGRES_PORT and $s.POSTGRES_DB_FIRST_YEAR)
                    then {DB_URL: ("jdbc:postgresql://" + $s.POSTGRES_HOST + ":" + $s.POSTGRES_PORT
@@ -232,7 +245,7 @@ jobs:
           selector:
             app: ${K8S_DEPLOYMENT}
           ports:
-          - port: ${CONTAINER_PORT}
+          - port: ${SERVICE_PORT}
             targetPort: ${CONTAINER_PORT}
         EOF
         fi
