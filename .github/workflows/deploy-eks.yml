@@ -144,6 +144,12 @@ jobs:
     - name: Configure kubectl for EKS
       run: aws eks update-kubeconfig --name "$EKS_CLUSTER" --region "$AWS_REGION"
 
+    # The target namespace may not exist yet (first deploy).
+    - name: Ensure namespace exists
+      run: |
+        kubectl create namespace "$K8S_NAMESPACE" --dry-run=client -o yaml | kubectl apply -f - >/dev/null
+        echo "Namespace $K8S_NAMESPACE is ready"
+
     # Copy every org secret (except AWS_*/EKS_*) into the cluster Secret that
     # all containers load. DB_URL is derived for the Servlet app.
     - name: Sync cluster Secret aether-env
