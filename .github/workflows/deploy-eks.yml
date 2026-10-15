@@ -144,14 +144,19 @@ jobs:
     - name: Configure kubectl for EKS
       run: aws eks update-kubeconfig --name "$EKS_CLUSTER" --region "$AWS_REGION"
 
-    # Copy every org secret (except AWS_*/EKS_*) into the cluster Secret that
-    # all containers load. DB_URL is derived for the Servlet app.
+    # Copy every org/repo secret AND variable into the cluster Secret that all
+    # containers load (a workflow only receives the first 100 org secrets, so
+    # non-sensitive settings live in variables). On a name clash the secret
+    # wins. Deployment/AWS settings are left out. DB_URL is derived for the
+    # Servlet app.
     - name: Sync cluster Secret aether-env
       env:
         ALL_SECRETS: ${{ toJSON(secrets) }}
+        ALL_VARS: ${{ toJSON(vars) }}
       run: |
-        echo "$ALL_SECRETS" | jq --arg ns "$K8S_NAMESPACE" '
-          with_entries(select(.key | test("^(github_token|aws_|eks_)"; "i") | not))
+        jq -n --argjson sec "$ALL_SECRETS" --argjson var "$ALL_VARS" --arg ns "$K8S_NAMESPACE" '
+          ($var + $sec)
+          | with_entries(select(.key | test("^(github_token|aws_|eks_|k8s_|ecr_|container_|service_type$)"; "i") | not))
           | . as $s
           | ($s + (if ($s.POSTGRES_HOST and $s.POSTGRES_PORT and $s.POSTGRES_DB_FIRST_YEAR)
                    then {DB_URL: ("jdbc:postgresql://" + $s.POSTGRES_HOST + ":" + $s.POSTGRES_PORT
