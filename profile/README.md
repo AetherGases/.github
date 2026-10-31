@@ -41,24 +41,75 @@ E o 2º ano que desenvolveram o restante do projeto:
 - Pedro Henrique Casarini Alves;
 - Vinícius Villas Boas.
 
-## Documentação
-Para acessar documentações mais detalhadas e obter mais entendimento sobre as partes implementadas durante a  construção do projeto, acesse o README dos repositórios: 
+## Repositórios
 
-- [Toolskit](https://github.com/AetherGases/aether-toolskit)
-- [Docs](https://github.com/AetherGases/aether-docs)
-- [Landing](https://github.com/AetherGases/aether-landing.git)
-- [Administrative](https://github.com/AetherGases/aether-web-administrative.git)
-- [Mobile](https://github.com/AetherGases/aether-mobile.git)
-- [Business Inteligence](https://github.com/AetherGases/aether-analytics.git)
-- [Web Flow](https://github.com/AetherGases/aether-web-flow.git)
-- [Aether MS Auth](https://github.com/AetherGases/aether-ms-auth.git)
-- [Aether MS Calculator](https://github.com/AetherGases/aether-ms-calculator.git)
-- [Aether MS Cloudinary](https://github.com/AetherGases/aether-ms-cloudinary.git)
-- [Aether MS Inventory](https://github.com/AetherGases/aether-ms-inventory.git)
-- [Aeko MS Hub](https://github.com/AetherGases/ms-aeko-hub.git)
-- [Aeko SDK](https://github.com/AetherGases/aeko-sdk.git)
-- [Aether RPA](https://github.com/AetherGases/aether-rpa.git)
-- [Aether Kong Gateway](https://github.com/AetherGases/aether-kong-gateway.git)
+### [aether-kong-gateway](https://github.com/AetherGases/aether-kong-gateway)
+
+Único ingress público do cluster EKS (`namespace aether`). O Kong recebe o tráfego proxied pelo Cloudflare e encaminha `/api/auth`, `/api/inventories`, `/api/calculator`, `/api/cloudinary`, `/hub`, `/dashboard` e `/` para os serviços internos.
+
+### [aether-ms-auth](https://github.com/AetherGases/aether-ms-auth)
+
+Microsserviço Java 21 Spring Boot de identidade. Emite JWT, mantém perfil e dispara e-mail pelo Brevo. Persiste no PostgreSQL B (`dbAether2Year`).
+
+### [aether-ms-inventory](https://github.com/AetherGases/aether-ms-inventory)
+
+Dono do inventário de GEE. Grava o registro no PostgreSQL B com status `PROCESSING`, enfileira `input_inventories:{id}` no Redis e, depois da análise do hub, persiste as emissões extraídas.
+
+### [aether-ms-calculator](https://github.com/AetherGases/aether-ms-calculator)
+
+API Java de ROI, payback e gases. O hub chama este serviço internamente (`INVESTMENT_MS_BASE_URL`) com `authentication-key`.
+
+### [aether-ms-cloudinary](https://github.com/AetherGases/aether-ms-cloudinary)
+
+API Java só de mídia. Assina e envia arquivos para o Cloudinary. Não tem banco próprio.
+
+### [ms-aeko-hub](https://github.com/AetherGases/ms-aeko-hub)
+
+Gateway HTTP e MCP FastAPI entre os apps e o núcleo de IA. Expõe sessões, `analyze_inventory`, `POST /ai/report` e ChatGPT MCP em `/hub/ai/mcp`. Usa Mongo, Redis (tickets `aeko:inventory-upload`) e chama os MS Java com chave interna.
+
+### [aeko-sdk](https://github.com/AetherGases/aeko-sdk)
+
+Biblioteca Python de agentes, RAG, memória e `AekoInventoryAnalyzer`. Não é um serviço: o hub importa o SDK e fala com Gemini, Chroma Cloud, Climatiq e Tavily.
+
+### [aether-rpa](https://github.com/AetherGases/aether-rpa)
+
+Worker Python de ETL bidirecional. Consome `rpa_outbox` com `LISTEN/NOTIFY aether_rpa` e replica o cadastro entre PostgreSQL A (`dbAether1Year`) e PostgreSQL B.
+
+### [aether-web-administrative](https://github.com/AetherGases/aether-web-administrative)
+
+Servlet/JSP de CRUD operacional. Escreve o cadastro no PostgreSQL A, que o RPA replica para o banco dos microsserviços.
+
+### [aether-web-flow](https://github.com/AetherGases/aether-web-flow)
+
+Portal TypeScript publicado em `/dashboard`. É o cliente web do fluxo operacional e da IA, atrás do Kong.
+
+### [aether-landing](https://github.com/AetherGases/aether-landing)
+
+Landing page institucional do Aether.
+
+### [aether-mobile](https://github.com/AetherGases/aether-mobile)
+
+App Kotlin. Envia inventários e acompanha a análise pelo mesmo ingress Kong.
+
+### [aether-analytics](https://github.com/AetherGases/aether-analytics)
+
+Business Intelligence no Databricks (Bronze, Silver e Gold). Calcula indicadores de emissões e reduções e atualiza o relatório gerencial.
+
+### [aether-toolskit](https://github.com/AetherGases/aether-toolskit)
+
+Ambiente local do ecossistema: Compose com PostgreSQL, Mongo, Redis, variáveis e scripts para subir os serviços juntos.
+
+### [aether-infra](https://github.com/AetherGases/aether-infra)
+
+Secrets, variáveis de ambiente e ordem de deploy no EKS. Define o namespace `aether` e a lista em `config/services.txt`.
+
+### [aether-docs](https://github.com/AetherGases/aether-docs)
+
+Documentação central do projeto: pesquisas, UX, arquitetura, diagramas, requisitos e materiais técnicos.
+
+### Arquivado
+
+[aether-core-api](https://github.com/AetherGases/aether-core-api) era a API monolítica anterior. Foi substituída pelos microsserviços Java e pelo hub.
 
 ## Acesso ao Aether
 
