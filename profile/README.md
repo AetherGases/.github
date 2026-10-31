@@ -39,7 +39,7 @@ E o 2º ano que desenvolveram o restante do projeto:
 - Fernanda Nogueira Nagata;
 - Isabelly Vila Silva da Hora;
 - Pedro Henrique Casarini Alves;
-- Vinícius Vilas Boas.
+- Vinícius Villas Boas.
 
 ## Repositórios
 
@@ -83,11 +83,15 @@ Servlet/JSP de CRUD operacional. Escreve o cadastro no PostgreSQL A, que o RPA r
 
 Portal TypeScript publicado em `/dashboard`. É o cliente web do fluxo operacional e da IA, atrás do Kong.
 
+### [aether-landing](https://github.com/AetherGases/aether-landing)
+
+Landing page institucional do Aether.
+
 ### [aether-mobile](https://github.com/AetherGases/aether-mobile)
 
 App Kotlin. Envia inventários e acompanha a análise pelo mesmo ingress Kong.
 
-### [aether-bi](https://github.com/AetherGases/aether-bi)
+### [aether-analytics](https://github.com/AetherGases/aether-analytics)
 
 Business Intelligence no Databricks (Bronze, Silver e Gold). Calcula indicadores de emissões e reduções e atualiza o relatório gerencial.
 
