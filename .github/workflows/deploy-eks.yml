@@ -20,11 +20,27 @@
 #   SERVICE_TYPE   (ClusterIP; use LoadBalancer for public services)
 #   SERVICE_PORT   (port the Service exposes: 80 for LoadBalancer, otherwise
 #                   the container port; the container port is the targetPort)
+#
+# ── Inputs (optional; for a second service in the same repo, e.g. a BFF) ──
+#   context        folder with the Dockerfile (.)
+#   name           ECR repository, Deployment and container name; when set,
+#                  ECR_REPOSITORY / K8S_DEPLOYMENT / CONTAINER_NAME are ignored
+#   container_port overrides CONTAINER_PORT
 
 name: Deploy to Amazon EKS (shared)
 
 on:
   workflow_call:
+    inputs:
+      context:
+        type: string
+        default: "."
+      name:
+        type: string
+        default: ""
+      container_port:
+        type: string
+        default: ""
 
 jobs:
   # Only deploy when the CI checks of the released commit passed.
@@ -82,17 +98,19 @@ jobs:
     # Resolve per-repo names: repo variable if set, otherwise the repo name.
     - name: Resolve settings
       env:
-        VAR_ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-        VAR_K8S_DEPLOYMENT: ${{ vars.K8S_DEPLOYMENT }}
-        VAR_CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+        # The repo variables describe the repo's main service, not a named one.
+        VAR_ECR_REPOSITORY: ${{ inputs.name == '' && vars.ECR_REPOSITORY || '' }}
+        VAR_K8S_DEPLOYMENT: ${{ inputs.name == '' && vars.K8S_DEPLOYMENT || '' }}
+        VAR_CONTAINER_NAME: ${{ inputs.name == '' && vars.CONTAINER_NAME || '' }}
         VAR_K8S_NAMESPACE: ${{ vars.K8S_NAMESPACE }}
-        VAR_CONTAINER_PORT: ${{ vars.CONTAINER_PORT }}
+        VAR_CONTAINER_PORT: ${{ inputs.container_port || vars.CONTAINER_PORT }}
+        INPUT_NAME: ${{ inputs.name }}
         VAR_SERVICE_TYPE: ${{ vars.SERVICE_TYPE }}
         VAR_SERVICE_PORT: ${{ vars.SERVICE_PORT }}
         VAR_AWS_REGION: ${{ vars.AWS_REGION }}
         VAR_EKS_CLUSTER: ${{ vars.EKS_CLUSTER }}
       run: |
-        REPO_NAME="${GITHUB_REPOSITORY#*/}"
+        REPO_NAME="${INPUT_NAME:-${GITHUB_REPOSITORY#*/}}"
         # ECR names must be lowercase.
         ECR_DEFAULT="$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]')"
         # Kubernetes names: lowercase letters, digits and "-" only.
@@ -148,8 +166,9 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
+        BUILD_CONTEXT: ${{ inputs.context }}
       run: |
-        docker build --platform linux/amd64 -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
+        docker build --platform linux/amd64 -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" "$BUILD_CONTEXT"
         docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> "$GITHUB_OUTPUT"
 
