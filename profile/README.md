@@ -1,3 +1,10 @@
+<div align="center">
+
+![Light theme](./images/light_hero.png#gh-light-mode-only)
+![Dark theme](./images/dark_hero.png#gh-dark-mode-only)
+
+</div>
+
 # Aether
 
 O Aether nasceu em 2026 de um projeto interdisciplinar do Instituto J&F. Conversamos com responsáveis por sustentabilidade de empresas do Grupo J&F e confirmamos a necessidade de uma ferramenta simples para a transição rumo a práticas mais sustentáveis, alinhada ao **ODS 12 (Consumo e Produção Responsáveis)**.
