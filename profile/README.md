@@ -1,6 +1,11 @@
-# Aether
+<div align="center">
 
-> Medir, entender e reduzir as emissões de gases de efeito estufa (GEE) da indústria, com apoio de IA.
+![Light theme](./images/light_hero.png#gh-light-mode-only)
+![Dark theme](./images/dark_hero.png#gh-dark-mode-only)
+
+</div>
+
+# Aether
 
 O Aether nasceu em 2026 de um projeto interdisciplinar do Instituto J&F. Conversamos com responsáveis por sustentabilidade de empresas do Grupo J&F e confirmamos a necessidade de uma ferramenta simples para a transição rumo a práticas mais sustentáveis, alinhada ao **ODS 12 (Consumo e Produção Responsáveis)**.
 
@@ -153,7 +158,7 @@ O [aether-toolskit](https://github.com/AetherGases/aether-toolskit) sobe Postgre
 
 O projeto foi desenvolvido por duas equipes.
 
-Os alunos do 1º ano idealizaram o projeto e desenvolveram parte dele:
+Os alunos do 1º ano idealizaram o projeto e desenvolveram o sistema web administrativo em Servlets:
 
 - Caio Campelo Rocha
 - Lais Casteluci Almeida
@@ -173,6 +178,8 @@ Os alunos do 2º ano desenvolveram o restante:
 ## Acesso ao Aether
 
 Para usar o Aether, a empresa assina um dos planos de serviço. Depois da contratação, os funcionários que inserem dados, analisam relatórios e os gerentes de sustentabilidade acessam a plataforma, com permissões personalizadas para cada indústria.
+
+O nosso site está disponível em: https://aethergases.org.br
 
 ## Suporte
 
